@@ -2,6 +2,7 @@ Function.prototype.extend=function(superCls){
 	var self_prototype=this.prototype;
 	var super_prototype=superCls.prototype;
 	this.super=super_prototype;
+	self_prototype.super=super_prototype;
 	for(var key in super_prototype){
 		if(!self_prototype[key]){
 			self_prototype[key]=super_prototype[key];
@@ -17,13 +18,13 @@ Function.prototype.body=function(obj){
 }
 /*
 	Author: Eric Meng
-	×÷Õß£ºÃÏÏêÒã
+	ä½œè€…ï¼šå­Ÿè¯¦æ¯…
 	above code implement oop. following is demo. it is little different to java oop. every thing is override by sub-class. in Java, only method override.
-	ÒÔÉÏÊµÏÖÃæÏò¶ÔÏó£¬ÒÔÏÂÊÇÀı×Ó¡£ÓĞµã²»Í¬ºÍjavaÃæÏò¶ÔÏó£¬ËùÓĞ¶¼±»×ÓÀà¸²¸Ç¡£java Ö»ÓĞ·½·¨±»¸²¸Ç¡£
+	ä»¥ä¸Šå®ç°é¢å‘å¯¹è±¡ï¼Œä»¥ä¸‹æ˜¯ä¾‹å­ã€‚æœ‰ç‚¹ä¸åŒå’Œjavaé¢å‘å¯¹è±¡ï¼Œæ‰€æœ‰éƒ½è¢«å­ç±»è¦†ç›–ã€‚java åªæœ‰æ–¹æ³•è¢«è¦†ç›–ã€‚
 	please follow LGPL protocol
-	Çë×ñÊØ LGPL Ğ­Òé
+	è¯·éµå®ˆ LGPL åè®®
 	my wechat is: treeiv email:cat555666@126.com, if you have question, my pleasure to discuss.
-	ÎÒµÄÎ¢ĞÅÊÇtreeiv. µçÓÊ cat555666@126.com. Èç¹ûÓĞÎÊÌâ»¶Ó­ÌÖÂÛ¡£
+	æˆ‘çš„å¾®ä¿¡æ˜¯treeiv. ç”µé‚® cat555666@126.com. å¦‚æœæœ‰é—®é¢˜æ¬¢è¿è®¨è®ºã€‚
 
 
 var Animal=function(){
@@ -36,7 +37,7 @@ var Animal=function(){
 });
 
 var Chiken=function(){
-	Chiken.super.constructor.apply(this);
+	Chiken.super.constructor.apply(this, arguments);// or this.super.constructor.apply(this, arguments);
 	alert("Chiken name is "+this.name);
 }.body({
 	name:"chiken",
@@ -46,7 +47,7 @@ var Chiken=function(){
 }).extend(Animal);
 
 var Duck=function(){
-	Duck.super.constructor.apply(this);
+	Duck.super.constructor.apply(this,arguments);
 	alert("Duck name is "+this.name);
 }.body({
 	name:"duck",
@@ -57,7 +58,7 @@ var Duck=function(){
 }).extend(Animal);
 
 var TomDuck=function(){
-	TomDuck.super.constructor.apply(this);
+	TomDuck.super.constructor.apply(this,arguments);
 	alert("TomDuck name is "+this.name);
 }.body({
 	name:"Tom duck",

@@ -1,13 +1,56 @@
+var m={
+	copyLevels:0,
+	deepCopy:function(fromObj,toObj,override){
+		m.copyLevels=0;
+		if(typeof override == "undefined"){
+			override=true;
+		}
+		m.oneLevelCopy(fromObj,toObj,override);
+	},
+	oneLevelCopy:function(fromObj,toObj,override){
+		if(m.copyLevels++>19){//avoid death loop
+			for(var key in fromObj){
+				if(typeof toObj[key] == 'undefined'){
+					toObj[key]=fromObj[key];
+				}else{
+					if(override){
+						toObj[key]=fromObj[key];
+					}
+				}
+			}
+			return;
+		}
+		console.log("ss "+m.copyLevels)
+		for(var key in fromObj){
+			if(typeof fromObj[key] == 'object'){
+				if(typeof toObj[key] == 'undefined'){
+					toObj[key]={};
+					m.oneLevelCopy(fromObj[key],toObj[key],override);
+				}else if(typeof toObj[key] == 'object'){
+					m.oneLevelCopy(fromObj[key],toObj[key],override);
+				}else{// means fromObj is object, but target is String int e.g.
+					if(override){
+						toObj[key]={};
+						m.oneLevelCopy(fromObj[key],toObj[key],override);
+					}
+				}
+			}else{
+				if(typeof toObj[key] == 'undefined'){
+					toObj[key]=fromObj[key];
+				}else{
+					if(override){
+						toObj[key]=fromObj[key];
+					}
+				}
+			}
+		}
+	}
+};
 Function.prototype.extend=function(superCls){
 	var self_prototype=this.prototype;
 	var super_prototype=superCls.prototype;
-	this.super=super_prototype;
 	self_prototype.super=super_prototype;
-	for(var key in super_prototype){
-		if(!self_prototype[key]){
-			self_prototype[key]=super_prototype[key];
-		}
-	}
+	m.deepCopy(super_prototype,self_prototype,false);
 	return this;
 }
 Function.prototype.body=function(obj){
@@ -20,7 +63,7 @@ Function.prototype.body=function(obj){
 	Author: Eric Meng
 	作者：孟详毅
 	above code implement oop. following is demo. it is little different to java oop. every thing is override by sub-class. in Java, only method override.
-	以上实现面向对象，以下是例子。有点不同和java面向对象，所有都被子类覆盖。java 只有方法被覆盖。
+	以上实现面向对象，以下是例子。
 	please follow LGPL protocol
 	请遵守 LGPL 协议
 	my wechat is: treeiv email:cat555666@126.com, if you have question, my pleasure to discuss.
@@ -30,6 +73,7 @@ Function.prototype.body=function(obj){
 var Animal=function(){
 	alert("Animal name is "+this.name);
 }.body({
+	self:this,
 	name:"generic animal",
 	sing:function(){
 		alert(this.name+" sing");
@@ -37,7 +81,7 @@ var Animal=function(){
 });
 
 var Chiken=function(){
-	Chiken.super.constructor.apply(this, arguments);// or this.super.constructor.apply(this, arguments);
+	this.super.constructor.apply(this);
 	alert("Chiken name is "+this.name);
 }.body({
 	name:"chiken",
@@ -47,18 +91,18 @@ var Chiken=function(){
 }).extend(Animal);
 
 var Duck=function(){
-	Duck.super.constructor.apply(this,arguments);
+	this.super.constructor.apply(this);
 	alert("Duck name is "+this.name);
 }.body({
 	name:"duck",
 	sing:function(){
-		Duck.super.sing.apply(this,arguments)
+		this.super.sing.apply(this,arguments)
 		alert(this.name+" sing gua gua");
 	}
 }).extend(Animal);
 
 var TomDuck=function(){
-	TomDuck.super.constructor.apply(this,arguments);
+	this.super.constructor.apply(this);
 	alert("TomDuck name is "+this.name);
 }.body({
 	name:"Tom duck",

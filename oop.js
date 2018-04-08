@@ -138,7 +138,7 @@ Function.prototype.body = function(obj) {
 		this.prototype[p] = obj[p];
 	}
 	return this;
-}
+} 
 /*
 Author: Eric Meng
 作者：孟详毅
